@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriDrone Togo – Technologie au service de l'agriculture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & ROOT ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green-deep:   #0a3d1f;
+      --green-mid:    #1a6b35;
+      --green-bright: #2ecc71;
+      --green-light:  #a8f0c6;
+      --earth:        #c8a46e;
+      --earth-dark:   #8b6635;
+      --sky:          #e8f4fd;
+      --white:        #fafff9;
+      --dark:         #0d1f12;
+      --gray:         #5a6e60;
+      --font-head:    'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 4%;
+      background: rgba(10, 61, 31, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(46,204,113,.15);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: .6rem;
+      font-family: var(--font-head); font-weight: 800; font-size: 1.3rem;
+      color: var(--white); text-decoration: none; letter-spacing: -.02em;
+    }
+
+    .nav-logo span { color: var(--green-bright); }
+
+    .nav-logo svg { width: 32px; height: 32px; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,.75); text-decoration: none;
+      font-size: .9rem; font-weight: 400; letter-spacing: .02em;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--green-bright); }
+
+    .nav-cta {
+      background: var(--green-bright); color: var(--green-deep) !important;
+      padding: .5rem 1.2rem; border-radius: 50px;
+      font-weight: 700 !important; transition: background .2s, transform .2s !important;
+    }
+
+    .nav-cta:hover { background: var(--green-light) !important; transform: translateY(-1px); }
+
+    /* ===== HERO ===== */
+    #accueil {
+      min-height: 100vh;
+      background: var(--green-deep);
+      display: grid; place-items: center;
+      position: relative; overflow: hidden;
+      padding: 6rem 4% 4rem;
+    }
+
+    /* animated grid bg */
+    #accueil::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(46,204,113,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(46,204,113,.07) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to   { background-position: 60px 60px; }
+    }
+
+    /* big decorative circle */
+    #accueil::after {
+      content: '';
+      position: absolute; bottom: -15vw; right: -10vw;
+      width: 55vw; height: 55vw;
+      background: radial-gradient(circle, rgba(46,204,113,.18) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center; max-width: 1200px; width: 100%;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(46,204,113,.15);
+      border: 1px solid rgba(46,204,113,.3);
+      color: var(--green-bright); font-size: .8rem; font-weight: 500;
+      padding: .35rem .9rem; border-radius: 50px; letter-spacing: .08em;
+      text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+
+    .hero-tag::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--green-bright); border-radius: 50%;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .4; transform: scale(1.5); }
+    }
+
+    .hero-title {
+      font-family: var(--font-head); font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800; line-height: 1.05; color: var(--white);
+      letter-spacing: -.03em; margin-bottom: 1.5rem;
+    }
+
+    .hero-title .accent { color: var(--green-bright); }
+    .hero-title .earth-accent { color: var(--earth); }
+
+    .hero-desc {
+      color: rgba(255,255,255,.65); font-size: 1.05rem; font-weight: 300;
+      line-height: 1.7; max-width: 480px; margin-bottom: 2.5rem;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--green-bright); color: var(--green-deep);
+      font-family: var(--font-body); font-weight: 700; font-size: .95rem;
+      padding: .85rem 2rem; border-radius: 50px; border: none;
+      cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 0 30px rgba(46,204,113,.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 40px rgba(46,204,113,.55);
+    }
+
+    .btn-outline {
+      background: transparent; color: var(--white);
+      font-family: var(--font-body); font-weight: 500; font-size: .95rem;
+      padding: .85rem 2rem; border-radius: 50px;
+      border: 1px solid rgba(255,255,255,.25);
+      cursor: pointer; text-decoration: none;
+      transition: border-color .2s, background .2s;
+    }
+
+    .btn-outline:hover { border-color: var(--green-bright); background: rgba(46,204,113,.08); }
+
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 3rem;
+      padding-top: 3rem; border-top: 1px solid rgba(255,255,255,.1);
+    }
+
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--font-head); font-size: 1.8rem; font-weight: 800;
+      color: var(--green-bright); line-height: 1;
+    }
+    .stat-label { color: rgba(255,255,255,.45); font-size: .8rem; margin-top: .3rem; }
+
+    /* Drone SVG illustration */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+
+    .drone-wrapper {
+      position: relative; animation: droneFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes droneFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33%       { transform: translateY(-20px) rotate(1.5deg); }
+      66%       { transform: translateY(-10px) rotate(-1deg); }
+    }
+
+    .drone-shadow {
+      position: absolute; bottom: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 180px; height: 30px;
+      background: radial-gradient(ellipse, rgba(0,0,0,.4) 0%, transparent 70%);
+      animation: shadowPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes shadowPulse {
+      0%, 100% { transform: translateX(-50%) scaleX(1); opacity: .5; }
+      33%       { transform: translateX(-50%) scaleX(.6); opacity: .2; }
+    }
+
+    /* scan line on drone */
+    .scan-line {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      top: 60%; width: 200px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      animation: scan 2.5s ease-in-out infinite;
+      opacity: .8;
+    }
+
+    @keyframes scan {
+      0%   { top: 55%; opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { top: 120%; opacity: 0; }
+    }
+
+    /* ===== SECTION BASE ===== */
+    section { padding: 6rem 4%; }
+
+    .section-label {
+      display: inline-block;
+      font-size: .75rem; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--green-mid);
+      margin-bottom: .8rem;
+    }
+
+    .section-title {
+      font-family: var(--font-head); font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
+      color: var(--dark);
+    }
+
+    .section-title .accent { color: var(--green-mid); }
+
+    .section-sub {
+      color: var(--gray); font-size: 1rem; font-weight: 300;
+      line-height: 1.7; max-width: 560px; margin-top: 1rem;
+    }
+
+    .center { text-align: center; }
+    .center .section-sub { margin: 1rem auto 0; }
+
+    /* ===== SERVICES ===== */
+    #services { background: var(--white); }
+
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; margin-top: 3.5rem; max-width: 1200px; margin-left: auto; margin-right: auto;
+    }
+
+    .service-card {
+      background: var(--white);
+      border: 1.5px solid #e0ede5;
+      border-radius: 20px; padding: 2rem;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+      position: relative; overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green-mid), var(--green-bright));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .3s;
+    }
+
+    .service-card:hover { transform: translateY(-6px); border-color: var(--green-bright); box-shadow: 0 20px 50px rgba(26,107,53,.12); }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-icon {
+      width: 54px; height: 54px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.2rem;
+    }
+
+    .service-card h3 {
+      font-family: var(--font-head); font-size: 1.1rem; font-weight: 700;
+      color: var(--dark); margin-bottom: .6rem;
+    }
+
+    .service-card p {
+      color: var(--gray); font-size: .9rem; line-height: 1.6; font-weight: 300;
+    }
+
+    /* ===== ABOUT ===== */
+    #apropos {
+      background: linear-gradient(135deg, var(--green-deep) 0%, #0d3520 100%);
+      position: relative; overflow: hidden;
+    }
+
+    #apropos::before {
+      content: '';
+      position: absolute; top: -20%; right: -10%;
+      width: 40vw; height: 40vw;
+      background: radial-gradient(circle, rgba(46,204,113,.12) 0%, transparent 65%);
+      border-radius: 50%;
+    }
+
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    .about-text .section-title { color: var(--white); }
+    .about-text .section-sub   { color: rgba(255,255,255,.6); }
+
+    .about-features {
+      display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2rem;
+    }
+
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(46,204,113,.15);
+      border-radius: 12px;
+    }
+
+    .feature-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--green-bright); flex-shrink: 0; margin-top: 5px;
+    }
+
+    .feature-text h4 {
+      font-family: var(--font-head); font-size: .95rem; color: var(--white);
+      margin-bottom: .25rem;
+    }
+
+    .feature-text p {
+      color: rgba(255,255,255,.5); font-size: .85rem; font-weight: 300; line-height: 1.5;
+    }
+
+    .about-visual {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+
+    .about-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px; padding: 1.5rem;
+      text-align: center;
+    }
+
+    .about-card .num {
+      font-family: var(--font-head); font-size: 2.2rem; font-weight: 800;
+      color: var(--green-bright); line-height: 1;
+    }
+
+    .about-card .lbl {
+      color: rgba(255,255,255,.5); font-size: .82rem; margin-top: .4rem; line-height: 1.4;
+    }
+
+    .about-card.large { grid-column: 1 / -1; display: flex; align-items: center; gap: 1.5rem; text-align: left; }
+    .about-card.large .num { font-size: 3rem; }
+
+    /* ===== PROCESS ===== */
+    #processus { background: #f2faf5; }
+
+    .process-steps {
+      display: flex; flex-direction: column; gap: 0;
+      max-width: 800px; margin: 3.5rem auto 0; position: relative;
+    }
+
+    .process-steps::before {
+      content: '';
+      position: absolute; left: 26px; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, var(--green-bright), rgba(46,204,113,.1));
+    }
+
+    .step {
+      display: flex; gap: 2rem; align-items: flex-start;
+      padding: 0 0 2.5rem 0; position: relative;
+    }
+
+    .step-num {
+      width: 54px; height: 54px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--green-deep);
+      border: 3px solid var(--green-bright);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head); font-size: 1rem; font-weight: 800;
+      color: var(--green-bright); position: relative; z-index: 1;
+    }
+
+    .step-content h3 {
+      font-family: var(--font-head); font-size: 1.1rem; font-weight: 700;
+      color: var(--dark); margin-bottom: .4rem; margin-top: .6rem;
+    }
+
+    .step-content p {
+      color: var(--gray); font-size: .9rem; line-height: 1.65; font-weight: 300;
+    }
+
+    /* ===== CONTACT ===== */
+    #contact { background: var(--white); }
+
+    .contact-inner {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 4rem; max-width: 1100px; margin: 3.5rem auto 0;
+      align-items: start;
+    }
+
+    .contact-info h3 {
+      font-family: var(--font-head); font-size: 1.3rem; font-weight: 700;
+      color: var(--dark); margin-bottom: 1.5rem;
+    }
+
+    .contact-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      margin-bottom: 1.3rem;
+    }
+
+    .contact-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem;
+    }
+
+    .contact-item-text strong {
+      display: block; font-size: .85rem; color: var(--dark); margin-bottom: .2rem;
+    }
+
+    .contact-item-text span {
+      font-size: .9rem; color: var(--gray); font-weight: 300;
+    }
+
+    .contact-form {
+      background: var(--white); border: 1.5px solid #deeae2;
+      border-radius: 20px; padding: 2.5rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,.05);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-group { margin-bottom: 1.2rem; }
+
+    .form-group label {
+      display: block; font-size: .8rem; font-weight: 600;
+      color: var(--dark); margin-bottom: .4rem; letter-spacing: .04em;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1.5px solid #deeae2;
+      border-radius: 10px;
+      font-family: var(--font-body); font-size: .9rem; color: var(--dark);
+      background: var(--white);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--green-bright);
+      box-shadow: 0 0 0 3px rgba(46,204,113,.12);
+    }
+
+    .form-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green-mid), var(--green-bright));
+      color: var(--white); font-family: var(--font-body);
+      font-size: 1rem; font-weight: 700;
+      padding: .9rem; border: none; border-radius: 10px;
+      cursor: pointer; letter-spacing: .02em;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(46,204,113,.35);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--dark);
+      padding: 4rem 4% 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .footer-brand .nav-logo { margin-bottom: 1rem; }
+
+    .footer-brand p {
+      color: rgba(255,255,255,.4); font-size: .85rem; line-height: 1.7;
+      font-weight: 300; max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-head); font-size: .9rem; font-weight: 700;
+      color: var(--white); margin-bottom: 1.2rem; letter-spacing: .04em;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: .7rem; }
+    .footer-col a {
+      color: rgba(255,255,255,.4); text-decoration: none;
+      font-size: .85rem; font-weight: 300;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--green-bright); }
+
+    .footer-bottom {
+      max-width: 1200px; margin: 2rem auto 0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-bottom p {
+      color: rgba(255,255,255,.25); font-size: .8rem; font-weight: 300;
+    }
+
+    .footer-bottom span { color: var(--green-bright); }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    .fade-up {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .hero-inner    { grid-template-columns: 1fr; }
+      .hero-visual   { display: none; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .about-inner   { grid-template-columns: 1fr; }
+      .contact-inner { grid-template-columns: 1fr; }
+      .footer-inner  { grid-template-columns: 1fr 1fr; }
+      .form-row      { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 5%; }
+      .nav-links { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .footer-inner  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <a href="#accueil" class="nav-logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="13" y="13" width="6" height="6" rx="2" fill="#2ecc71"/>
+      <line x1="16" y1="16" x2="4"  y2="4"  stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="16" x2="28" y2="4"  stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="16" x2="4"  y2="28" stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="16" x2="28" y2="28" stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="4"  cy="4"  r="3" fill="#a8f0c6"/>
+      <circle cx="28" cy="4"  r="3" fill="#a8f0c6"/>
+      <circle cx="4"  cy="28" r="3" fill="#a8f0c6"/>
+      <circle cx="28" cy="28" r="3" fill="#a8f0c6"/>
+    </svg>
+    Agri<span>Drone</span> Togo
+  </a>
+  <ul class="nav-links">
+    <li><a href="#accueil">Accueil</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#processus">Processus</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="accueil">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">Technologie agricole — Togo &amp; Afrique de l'Ouest</div>
+      <h1 class="hero-title">
+        L'agriculture togolaise<br>prend de la <span class="accent">hauteur</span><br>avec les <span class="earth-accent">drones</span>.
+      </h1>
+      <p class="hero-desc">
+        AgriDrone Togo conçoit, vend et entretient des drones agricoles de haute précision. Formation professionnelle, suivi terrain et solutions sur mesure pour les exploitants togolais et ouest-africains.
+      </p>
+      <div class="hero-actions">
+        <a href="#services" class="btn-primary">Découvrir nos services</a>
+        <a href="#contact"  class="btn-outline">Nous contacter</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">200+</div><div class="stat-label">Ha traités par jour</div></div>
+        <div class="stat-item"><div class="stat-num">5×</div><div class="stat-label">Plus rapide que<br>le traitement manuel</div></div>
+        <div class="stat-item"><div class="stat-num">30%</div><div class="stat-label">Économie<br>d'intrants agricoles</div></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="drone-wrapper">
+        <div class="drone-shadow"></div>
+        <div class="scan-line"></div>
+        <!-- SVG Drone -->
+        <svg width="320" height="280" viewBox="0 0 320 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Rotor arms -->
+          <line x1="160" y1="140" x2="60"  y2="60"  stroke="#2ecc71" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+          <line x1="160" y1="140" x2="260" y2="60"  stroke="#2ecc71" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+          <line x1="160" y1="140" x2="60"  y2="220" stroke="#2ecc71" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+          <line x1="160" y1="140" x2="260" y2="220" stroke="#2ecc71" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+          <!-- Motor housings -->
+          <circle cx="60"  cy="60"  r="20" fill="#1a6b35" stroke="#2ecc71" stroke-width="2"/>
+          <circle cx="260" cy="60"  r="20" fill="#1a6b35" stroke="#2ecc71" stroke-width="2"/>
+          <circle cx="60"  cy="220" r="20" fill="#1a6b35" stroke="#2ecc71" stroke-width="2"/>
+          <circle cx="260" cy="220" r="20" fill="#1a6b35" stroke="#2ecc71" stroke-width="2"/>
+          <!-- Propellers -->
+          <ellipse cx="60"  cy="60"  rx="36" ry="7" fill="rgba(168,240,198,.35)" style="animation:spin 0.4s linear infinite;transform-origin:60px 60px"/>
+          <ellipse cx="260" cy="60"  rx="36" ry="7" fill="rgba(168,240,198,.35)" style="animation:spin .35s linear infinite reverse;transform-origin:260px 60px"/>
+          <ellipse cx="60"  cy="220" rx="36" ry="7" fill="rgba(168,240,198,.35)" style="animation:spin .38s linear infinite reverse;transform-origin:60px 220px"/>
+          <ellipse cx="260" cy="220" rx="36" ry="7" fill="rgba(168,240,198,.35)" style="animation:spin .42s linear infinite;transform-origin:260px 220px"/>
+          <!-- Body -->
+          <rect x="120" y="115" width="80" height="50" rx="12" fill="#0a3d1f" stroke="#2ecc71" stroke-width="2"/>
+          <rect x="130" y="125" width="60" height="30" rx="8" fill="#1a6b35" opacity=".8"/>
+          <!-- Camera lens -->
+          <circle cx="160" cy="175" r="12" fill="#0a3d1f" stroke="#2ecc71" stroke-width="1.5"/>
+          <circle cx="160" cy="175" r="7"  fill="#0d1f12"/>
+          <circle cx="163" cy="172" r="2"  fill="rgba(255,255,255,.6)"/>
+          <!-- LED lights -->
+          <circle cx="130" cy="120" r="3" fill="#2ecc71" style="animation:ledBlink 1s ease-in-out infinite"/>
+          <circle cx="190" cy="120" r="3" fill="#c8a46e" style="animation:ledBlink 1s ease-in-out infinite .5s"/>
+          <!-- Tank -->
+          <rect x="140" y="165" width="40" height="16" rx="6" fill="#1a6b35" stroke="#a8f0c6" stroke-width="1"/>
+          <!-- Spray dots -->
+          <circle cx="148" cy="195" r="2" fill="#a8f0c6" opacity=".6" style="animation:drop 1.5s ease-in infinite .1s"/>
+          <circle cx="158" cy="200" r="2" fill="#a8f0c6" opacity=".6" style="animation:drop 1.5s ease-in infinite .4s"/>
+          <circle cx="168" cy="195" r="2" fill="#a8f0c6" opacity=".6" style="animation:drop 1.5s ease-in infinite .7s"/>
+          <circle cx="178" cy="202" r="2" fill="#a8f0c6" opacity=".6" style="animation:drop 1.5s ease-in infinite 0s"/>
+          <style>
+            @keyframes spin    { to { transform: rotate(360deg); } }
+            @keyframes ledBlink{ 0%,100%{opacity:1}50%{opacity:.1} }
+            @keyframes drop    { 0%{transform:translateY(0);opacity:.6}100%{transform:translateY(30px);opacity:0} }
+          </style>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section id="services">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="center">
+      <span class="section-label">Ce que nous faisons</span>
+      <h2 class="section-title">Nos <span class="accent">services</span></h2>
+      <p class="section-sub">Des solutions complètes pensées pour les agriculteurs togolais et les professionnels du secteur agricole.</p>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card fade-up">
+        <div class="service-icon">🛒</div>
+        <h3>Vente de drones agricoles</h3>
+        <p>Une gamme complète de drones certifiés pour l'épandage, la cartographie et la surveillance de cultures. Modèles adaptés à toutes les surfaces exploitées.</p>
+      </div>
+
+      <div class="service-card fade-up" style="transition-delay:.1s">
+        <div class="service-icon">🔧</div>
+        <h3>Maintenance &amp; Réparation</h3>
+        <p>Service après-vente réactif, pièces de rechange disponibles, révisions périodiques et diagnostics sur site pour minimiser les temps d'arrêt.</p>
+      </div>
+
+      <div class="service-card fade-up" style="transition-delay:.2s">
+        <div class="service-icon">🎓</div>
+        <h3>Formation certifiée</h3>
+        <p>Programmes de formation pratique au pilotage et à la maintenance de drones agricoles. Certification reconnue, sessions en présentiel et en ligne.</p>
+      </div>
+
+      <div class="service-card fade-up" style="transition-delay:.3s">
+        <div class="service-icon">🗺️</div>
+        <h3>Cartographie &amp; Diagnostic</h3>
+        <p>Modélisation 3D des parcelles, indices de végétation NDVI, détection précoce de maladies et cartographie de précision pour optimiser vos rendements.</p>
+      </div>
+
+      <div class="service-card fade-up" style="transition-delay:.4s">
+        <div class="service-icon">💧</div>
+        <h3>Épandage de précision</h3>
+        <p>Traitement phytosanitaire et fertilisation avec une précision centimétrique. Réduction des intrants de 30 % et impact environnemental minimisé.</p>
+      </div>
+
+      <div class="service-card fade-up" style="transition-delay:.5s">
+        <div class="service-icon">📊</div>
+        <h3>Suivi &amp; Analyse de données</h3>
+        <p>Tableau de bord intelligent, rapports automatiques, suivi de l'évolution des cultures saison après saison grâce à l'analyse de données satellitaires et drone.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== À PROPOS ===== -->
+<section id="apropos">
+  <div class="about-inner">
+    <div class="about-text fade-up">
+      <span class="section-label" style="color:var(--green-light)">Notre histoire</span>
+      <h2 class="section-title" style="color:var(--white)">Leader de l'agriculture<br>de <span style="color:var(--green-bright)">précision au Togo</span></h2>
+      <p class="section-sub">
+        Fondée à Lomé, AgriDrone Togo est née de la conviction que la technologie drone peut transformer durablement l'agriculture africaine — rendre les exploitations plus rentables, plus durables, et mieux préparées aux défis climatiques.
+      </p>
+      <div class="about-features">
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div class="feature-text">
+            <h4>Expertise locale &amp; internationale</h4>
+            <p>Notre équipe allie ingénieurs certifiés en agronomie et en drone-pilotage, formés en Europe et au Togo.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div class="feature-text">
+            <h4>Homologation ANAC Togo</h4>
+            <p>Tous nos appareils respectent les réglementations de l'Autorité Nationale de l'Aviation Civile du Togo.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div class="feature-text">
+            <h4>Support 24h/7j</h4>
+            <p>Un technicien disponible à tout moment pour les interventions urgentes sur toute l'étendue du territoire.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-visual fade-up" style="transition-delay:.2s">
+      <div class="about-card"><div class="num">150+</div><div class="lbl">Clients agriculteurs accompagnés</div></div>
+      <div class="about-card"><div class="num">12</div><div class="lbl">Régions couvertes au Togo</div></div>
+      <div class="about-card"><div class="num">98%</div><div class="lbl">Taux de satisfaction client</div></div>
+      <div class="about-card"><div class="num">4 ans</div><div class="lbl">D'expérience terrain</div></div>
+      <div class="about-card large">
+        <div class="num">5 000+</div>
+        <div class="lbl">Hectares cartographiés et traités depuis notre création — l'équivalent de 70 km² de terres agricoles optimisées.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROCESSUS ===== -->
+<section id="processus">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="center">
+      <span class="section-label">Comment ça marche</span>
+      <h2 class="section-title">Notre <span class="accent">processus</span> en 4 étapes</h2>
+      <p class="section-sub">Un accompagnement structuré de la première consultation jusqu'au suivi post-mission.</p>
+    </div>
+    <div class="process-steps">
+      <div class="step fade-up">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Consultation &amp; Audit terrain</h3>
+          <p>Nous visitons votre exploitation pour évaluer vos besoins spécifiques, analyser les cultures, les superficies et définir les objectifs à atteindre avec les drones.</p>
+        </div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.15s">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Proposition &amp; Choix de solution</h3>
+          <p>Sur la base de l'audit, nous vous soumettons un devis détaillé avec le ou les modèles de drones adaptés, le plan de formation et les modules logiciels recommandés.</p>
+        </div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.3s">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Déploiement &amp; Formation</h3>
+          <p>Livraison du matériel, configuration complète, et session de formation pratique encadrée par nos instructeurs certifiés directement sur votre site.</p>
+        </div>
+      </div>
+      <div class="step fade-up" style="transition-delay:.45s">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h3>Suivi &amp; Maintenance continue</h3>
+          <p>Accès à notre tableau de bord de suivi, révisions régulières, mises à jour logicielles, et support technique dédié tout au long de la saison agricole.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="center">
+      <span class="section-label">Parlons-en</span>
+      <h2 class="section-title">Contactez <span class="accent">AgriDrone Togo</span></h2>
+      <p class="section-sub">Un projet, une question, un devis ? Notre équipe vous répond sous 24 heures.</p>
+    </div>
+    <div class="contact-inner">
+      <div class="contact-info fade-up">
+        <h3>Informations de contact</h3>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Adresse</strong>
+            <span>Boulevard du 13 Janvier, Lomé – Togo</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-item-text">
+            <strong>Téléphone</strong>
+            <span>+228 90 00 00 00</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-item-text">
+            <strong>Email</strong>
+            <span>contact@agridronetogo.tg</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-item-text">
+            <strong>Horaires</strong>
+            <span>Lun – Ven : 08h00 – 18h00<br>Sam : 08h00 – 13h00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form fade-up" style="transition-delay:.2s">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" placeholder="Kossi"/>
+          </div>
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" placeholder="Amétépé"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="kossi@exemple.com"/>
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" placeholder="+228 90 XX XX XX"/>
+        </div>
+        <div class="form-group">
+          <label>Service souhaité</label>
+          <select>
+            <option>Achat de drone</option>
+            <option>Formation pilotage</option>
+            <option>Maintenance / Réparation</option>
+            <option>Cartographie de parcelle</option>
+            <option>Épandage de précision</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Décrivez votre projet ou votre besoin…"></textarea>
+        </div>
+        <button class="form-submit" onclick="alert('Merci pour votre message ! Notre équipe vous contactera sous 24h.')">
+          Envoyer la demande →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#accueil" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect x="13" y="13" width="6" height="6" rx="2" fill="#2ecc71"/>
+          <line x1="16" y1="16" x2="4"  y2="4"  stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+          <line x1="16" y1="16" x2="28" y2="4"  stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+          <line x1="16" y1="16" x2="4"  y2="28" stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+          <line x1="16" y1="16" x2="28" y2="28" stroke="#2ecc71" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="4"  cy="4"  r="3" fill="#a8f0c6"/>
+          <circle cx="28" cy="4"  r="3" fill="#a8f0c6"/>
+          <circle cx="4"  cy="28" r="3" fill="#a8f0c6"/>
+          <circle cx="28" cy="28" r="3" fill="#a8f0c6"/>
+        </svg>
+        Agri<span>Drone</span> Togo
+      </a>
+      <p>Nous mettons la technologie drone au service de l'agriculture togolaise pour des exploitations plus rentables et plus durables.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Vente de drones</a></li>
+        <li><a href="#services">Maintenance</a></li>
+        <li><a href="#services">Formation</a></li>
+        <li><a href="#services">Cartographie</a></li>
+        <li><a href="#services">Épandage</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Entreprise</h4>
+      <ul>
+        <li><a href="#apropos">À propos</a></li>
+        <li><a href="#processus">Notre processus</a></li>
+        <li><a href="#contact">Carrières</a></li>
+        <li><a href="#contact">Partenaires</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:contact@agridronetogo.tg">contact@agridronetogo.tg</a></li>
+        <li><a href="tel:+22890000000">+228 90 00 00 00</a></li>
+        <li><a href="#">Lomé, Togo</a></li>
+        <li><a href="#contact">Formulaire de contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <span>AgriDrone Togo</span>. Tous droits réservés.</p>
+    <p>Projet PPE — Master Cybersécurité <span>IPNET Technology</span></p>
+  </div>
+</footer>
+
+<!-- ===== SCROLL ANIMATION SCRIPT ===== -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
